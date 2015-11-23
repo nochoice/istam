@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var io = require('socket.io');
-var mainSockets = require('./lib/sockets/main.js');
+var mainSockets = require('./lib/sockets/sockets.js');
 
 var port = 3700;
 
