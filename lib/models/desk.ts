@@ -1,14 +1,28 @@
 import {Player, IPlayer} from "./player";
+import * as uid from "uid";
+import * as CONST from "../constants";
+import {ICard} from "./card";
 
-const maxPlayers:number = 5;
+export interface IDesk {
+    addPlayer(player: IPlayer): void;
+    start(): void;
+    getPlayers(): IPlayer[];
+    getDeskId(): string;
+    isPrepared(): boolean;
+}
 
-export class Desk {
-    private players: IPlayer[];
+export class Desk implements IDesk {
 
-    constructor (private name: string, private maxNumberOfPlayers: number) {}
+    private players: IPlayer[] = [];
+    private deskId: string;
+    private currentCard: ICard;
+
+    constructor (private name: string, private maxNumberOfPlayers: number = 5) {
+        this.generateDeskId();
+    }
 
     public start(): void {
-        console.log("start Game")
+        console.log("start Game");
     }
 
     public getPlayers(): IPlayer[] {
@@ -16,12 +30,29 @@ export class Desk {
     }
 
     public addPlayer(player: IPlayer): void {
-        if(this.maxNumberOfPlayers < this.players.length) {
+        if(this.maxNumberOfPlayers > this.players.length) {
             this.players.push(player);
         }
     }
+
+    public isPrepared(): boolean {
+        return this.maxNumberOfPlayers === this.players.length;
+    }
+
+    public getDeskId(): string {
+        return this.deskId;
+    }
+
+    private generateDeskId(): void {
+        this.deskId = uid(CONST.UID_LENGTH);
+    }
 }
 
+let d: IDesk = new Desk("name of game", 3);
+let p1: IPlayer = new Player("Roman", "aaaa");
 
-let d: Desk = new Desk("name of game", 5);
-d.start();
+
+d.addPlayer(p1);
+console.log(d.getDeskId());
+console.log(d.getPlayers());
+

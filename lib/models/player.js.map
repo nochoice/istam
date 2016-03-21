@@ -1,1 +1,1 @@
-{"version":3,"file":"player.js","sourceRoot":"","sources":["player.ts"],"names":["Player","Player.constructor"],"mappings":"AAKA;IAEIA;QACIC,OAAOA,CAACA,GAAGA,CAACA,gBAAgBA,CAACA,CAACA;IAClCA,CAACA;IAGLD,aAACA;AAADA,CAACA,AAPD,IAOC;AAPY,cAAM,SAOlB,CAAA"}
+{"version":3,"file":"player.js","sourceRoot":"","sources":["player.ts"],"names":[],"mappings":";AAKA;IAEI;QACI,OAAO,CAAC,GAAG,CAAC,gBAAgB,CAAC,CAAC;IAClC,CAAC;IAGL,aAAC;AAAD,CAAC,AAPD,IAOC;AAPY,cAAM,SAOlB,CAAA"}
