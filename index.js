@@ -1,7 +1,8 @@
 var express = require("express");
 var app = express();
 var io = require('socket.io');
-var mainSockets = require('./lib/sockets/sockets.js');
+var Game = require('./lib/index.js');
+
 
 var port = 3700;
 
@@ -18,7 +19,6 @@ app.get("/", function(req, res){
 
 var sockets = io.listen(app.listen(port));
 
-mainSockets(sockets);
-
+var game = new Game.Istam(sockets);
 
 console.log("Listening on port " + port);

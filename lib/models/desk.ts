@@ -1,7 +1,9 @@
-import {Player, IPlayer} from "./player";
+import * as _ from "lodash";
 import * as uid from "uid";
 import * as CONST from "../constants";
-import {ICard} from "./card";
+
+import {Player, IPlayer} from "./player";
+import {ICard, Card} from "./card";
 
 export interface IDesk {
     addPlayer(player: IPlayer): void;
@@ -15,14 +17,21 @@ export class Desk implements IDesk {
 
     private players: IPlayer[] = [];
     private deskId: string;
+    private cards: number[];
     private currentCard: ICard;
+    private started: boolean = false;
 
     constructor (private name: string, private maxNumberOfPlayers: number = 5) {
         this.generateDeskId();
+        this.copyCardSet();
     }
 
     public start(): void {
         console.log("start Game");
+        this.started = true;
+
+        this.setPlayersCard();
+        this.setCurrentCard();
     }
 
     public getPlayers(): IPlayer[] {
@@ -30,7 +39,7 @@ export class Desk implements IDesk {
     }
 
     public addPlayer(player: IPlayer): void {
-        if(this.maxNumberOfPlayers > this.players.length) {
+        if(this.maxNumberOfPlayers > this.players.length && !this.started) {
             this.players.push(player);
         }
     }
@@ -46,13 +55,20 @@ export class Desk implements IDesk {
     private generateDeskId(): void {
         this.deskId = uid(CONST.UID_LENGTH);
     }
+
+    private copyCardSet(): void {
+        this.cards = _.shuffle(CONST.CARDS);
+    }
+
+    private setPlayersCard(): void {
+        this.players.forEach((player): void => {
+            let card: ICard = new Card(this.cards.pop());
+            player.setCard(card);
+        });
+    }
+
+    private setCurrentCard(): void {
+        this.currentCard = this.cards.pop();
+    }
 }
-
-let d: IDesk = new Desk("name of game", 3);
-let p1: IPlayer = new Player("Roman", "aaaa");
-
-
-d.addPlayer(p1);
-console.log(d.getDeskId());
-console.log(d.getPlayers());
 

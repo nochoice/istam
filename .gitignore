@@ -29,5 +29,9 @@ node_modules
 .idea
 
 public/js/out.js
+
+lib/*.js
+lib/*.js.map
+
 lib/models/*.js
 lib/models/*.js.map

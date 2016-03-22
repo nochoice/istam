@@ -1,4 +1,4 @@
-export const UID_LENGTH:number = 4;
+export const UID_LENGTH:number = 5;
 export const CARDS:any = [
     [0, 1, 2, 3, 4, 5, 6, 56],
     [0, 7, 14, 21, 28, 35, 42, 49],
