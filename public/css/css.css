@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#add-name, #join, #wait, #play, #end-game {
+    display: none;
+    height: 100%;
+    background: red;
+}
+
+#add-name { background: #aaa; }
+#join { background: #bbb; }
+#wait { background: #ccc; }
+#play { background: #ddd; }
+#end-game { background: #eee; }

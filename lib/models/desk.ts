@@ -4,6 +4,7 @@ import * as CONST from "../constants";
 
 import {Player, IPlayer} from "./player";
 import {ICard, Card} from "./card";
+import {ICard} from "./card";
 
 export interface IDesk {
     addPlayer(player: IPlayer): void;
@@ -11,6 +12,8 @@ export interface IDesk {
     getPlayers(): IPlayer[];
     getDeskId(): string;
     isPrepared(): boolean;
+    isStarted(): boolean;
+    generateState(): any;
 }
 
 export class Desk implements IDesk {
@@ -32,6 +35,11 @@ export class Desk implements IDesk {
 
         this.setPlayersCard();
         this.setCurrentCard();
+
+        this.players
+            .forEach((player: IPlayer): void => {
+                player.getSocket().emit("desk:start", this.generateState());
+            });
     }
 
     public getPlayers(): IPlayer[] {
@@ -39,8 +47,18 @@ export class Desk implements IDesk {
     }
 
     public addPlayer(player: IPlayer): void {
-        if(this.maxNumberOfPlayers > this.players.length && !this.started) {
+
+        if(this.maxNumberOfPlayers > this.players.length
+            && !this.started
+            && !this.playerIsInDesk(player)) {
+
             this.players.push(player);
+
+            this.players
+                .forEach((p: IPlayer): void => {
+                    p.getSocket().emit("desk:add-player", {data: "player added " + player.getName()});
+                });
+
         }
     }
 
@@ -48,8 +66,45 @@ export class Desk implements IDesk {
         return this.maxNumberOfPlayers === this.players.length;
     }
 
+    public isStarted(): boolean {
+        return this.started;
+    }
+
     public getDeskId(): string {
         return this.deskId;
+    }
+
+    public generateState(): any {
+        let state = {
+            players: {},
+            currentCard: this.currentCard
+        };
+
+        this.players
+            .forEach((p: IPlayer): void => {
+                let id: string = p.getId();
+                let card:ICard = p.getCard();
+
+                state.players[id] = {
+                    name: p.getName(),
+                    card: p.getCard().getCard()
+                };
+            });
+
+        return state;
+    }
+
+    private playerIsInDesk(player: IPlayer): boolean {
+        let isIn: boolean = false;
+        this.players.forEach((p: IPlayer): void => {
+
+            if(player.getId() === p.getId()) {
+                isIn= true;
+            }
+        });
+
+        console.log("Is in " + isIn);
+        return isIn;
     }
 
     private generateDeskId(): void {

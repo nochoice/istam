@@ -1,5 +1,6 @@
 export interface ICard {
     hasSign(sign: number): boolean;
+    getCard(): number[];
 }
 
 export class Card implements ICard {
@@ -7,5 +8,9 @@ export class Card implements ICard {
 
     public hasSign(sign: number): boolean {
         return this.card.indexOf(sign) >= 0;
+    }
+
+    public getCard(): number[] {
+        return this.card;
     }
 }

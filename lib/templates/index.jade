@@ -2,6 +2,23 @@
 extends ./layouts/default.jade
 
 block content
-    h1
+    #add-name
+        input(type="text" name="name")
+        button Potvrd
 
-    button.js-btn-join JOIN
+    #join
+        button Pridej se do hry
+
+    #wait
+        div Zoznam hracov v hre
+
+    #play
+        div Playing
+        .card-current Current card
+
+        .card-own Own Card
+
+        .card-others Others cards
+
+    #end-game
+        div Konec hry
