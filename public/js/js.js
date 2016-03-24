@@ -1,5 +1,6 @@
 var socket = io.connect('http://localhost:3700');
 var gameStates = ["add-name", "join", "wait", "play", "end-game"];
+var uid;
 
 function setState(state) {
     gameStates.forEach(function(state) {
@@ -9,6 +10,16 @@ function setState(state) {
     $("#" + state).css("display", "block");
 }
 
+var ScoreBoard = {
+    holder: $(".score-board"),
+    generate: function(data) {
+        this.holder.html("aaaa");
+    }
+};
+
+ScoreBoard.generate();
+
+
 function init() {
 
     setHandlers();
@@ -17,6 +28,8 @@ function init() {
     if(!localStorage.getItem("uid")) {
         localStorage.setItem("uid", new Date().getTime());
     }
+
+    uid = localStorage.getItem("uid");
 
     if(!localStorage.getItem("playerName")) {
         setState("add-name");
@@ -47,9 +60,7 @@ function setSocketsHandler() {
     });
 
     socket.on("desk:start", function(data) {
-        console.log("game start");
         console.log(data);
-
         setState("play");
         generateDesk(data);
     });
@@ -61,13 +72,37 @@ function setSocketsHandler() {
 }
 
 function generateDesk(data) {
-    var playBlock = $("#play");
-
-    playBlock.find(".card-current").html(generateCard(data.currentCard));
+    generateCard(".card-current", data.currentCard);
+    generateCard(".card-own", data.players[uid].card);
 }
 
-function generateCard(card) {
-    return JSON.stringify(card);
+function generateCard(where, card) {
+    var playBlock = $("#play");
+    playBlock.find(where).html(generateHtmlCard(card));
+}
+
+function generateHtmlCard(card) {
+    var html =  "<div class='card'>";
+
+    card.forEach(function(sign, i) {
+        var path = "/images/" + sign + ".png";
+        html += "<img src='" + path + "' class='sign sign" + i + "'/>"
+    });
+
+    html += "</div>";
+
+    console.log($(html).find("img"));
+
+    $(html).find("img").each(function(){
+        var a = Math.random() * 100 - 5;
+        $(this).css('transform', 'rotate(' + a + 'deg)');
+    });
+
+    return html;
+}
+
+function generateScoreBoard() {
+
 }
 
 function userDataEmit() {
@@ -81,20 +116,3 @@ function userDataEmit() {
 }
 
 init();
-
-
-
-
-
-
-//socket.emit("player:data", {
-//    uid: localStorage.getItem("uid"),
-//    name: localStorage.getItem("playerName")
-//
-//}, function(data) {
-//    //console.log(data)
-//});
-//
-//socket.on("desk:add-player", function(data) {
-//    console.log(data);
-//})

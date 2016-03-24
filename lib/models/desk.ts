@@ -87,7 +87,8 @@ export class Desk implements IDesk {
 
                 state.players[id] = {
                     name: p.getName(),
-                    card: p.getCard().getCard()
+                    card: p.getCard().getCard(),
+                    score: p.getScore()
                 };
             });
 

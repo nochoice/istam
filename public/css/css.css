@@ -14,3 +14,26 @@ body {
 #wait { background: #ccc; }
 #play { background: #ddd; }
 #end-game { background: #eee; }
+
+
+.card {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid red;
+    position: relative;
+    background: #fff;
+}
+
+.card .sign {
+    position: absolute;
+}
+
+.card .sign0 {  top: 10px;  left: 80px;  }
+.card .sign1 {  top: 46px;  left: 20px;  }
+.card .sign2 {  top: 93px;  left: 13px;  }
+.card .sign3 {  top: 132px; left: 107px;  }
+.card .sign4 {  top: 44px;  left: 133px;  }
+.card .sign5 {  top: 91px; left: 145px;  }
+.card .sign6 {  top: 137px; left: 45px;  }
+.card .sign7 {  top: 70px;  left: 74px;  }

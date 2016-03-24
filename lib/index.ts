@@ -28,33 +28,34 @@ export class Istam {
         let s: any = this.socket;
 
         s.on('connection', (socket: any): void => {
-            socket.on("player:data", (data, cb): void => this.playerData(data, cb, socket));
 
+            socket.on("player:data", (data, cb): void => this.playerData(data, cb, socket));
             socket.on('disconnect', (data: any): void => console.log("disconnect"));
         });
 
     }
 
     private playerData(data: any, cb: any, socket: any) {
+
+        console.log("player:data");
+
         let player: IPlayer = this.players[data.uid];
 
         if(!player) {
-            player = this.players[data.uid] = new Player(data.name, data.uid, socket);
+            player = this.players[data.uid] = new Player(data.name, data.uid);
         }
 
-        console.log("1");
+        player.setSocket(socket);
 
         if(!this.isPlayerIsInDesk(player)) {
             this.addPlayerToDesk(player);
         } else {
-            console.log("asaasas");
             this.deskFullData(player);
         }
 
         this.deskStart();
         cb();
     }
-
 
     private deskFullData(player: IPlayer): void {
         let desk: IDesk = this.playerToDesk[player.getId()];

@@ -8,7 +8,9 @@ export interface IPlayer {
     getCard(): ICard;
     getId(): string;
     getSocket(): any;
+    setSocket(socket: any): void
     getName(): string;
+    getScore(): number;
     //getDesk(): IDesk;
     //setDesk(desk: IDesk): void;
     //resetDesk(): void;
@@ -20,6 +22,7 @@ export class Player implements IPlayer{
     private card: ICard;
     private winCards: ICard[];
     private desk: IDesk;
+    private score: number = 0;
     
     constructor(private name: string, private id: string, private socket?: any) {
 
@@ -43,6 +46,14 @@ export class Player implements IPlayer{
 
     public getSocket(): any {
         return this.socket;
+    }
+
+    public setSocket(socket: any): void {
+        this.socket = socket;
+    }
+
+    public getScore(): number {
+        return this.score;
     }
 
     //public setDesk(desk: IDesk) {
