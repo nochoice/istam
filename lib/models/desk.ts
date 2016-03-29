@@ -4,7 +4,6 @@ import * as CONST from "../constants";
 
 import {Player, IPlayer} from "./player";
 import {ICard, Card} from "./card";
-import {ICard} from "./card";
 
 export interface IDesk {
     addPlayer(player: IPlayer): void;
@@ -14,13 +13,14 @@ export interface IDesk {
     isPrepared(): boolean;
     isStarted(): boolean;
     generateState(): any;
+    getCurrentCard(): ICard
 }
 
 export class Desk implements IDesk {
 
     private players: IPlayer[] = [];
     private deskId: string;
-    private cards: number[];
+    private cards: any;
     private currentCard: ICard;
     private started: boolean = false;
 
@@ -77,7 +77,7 @@ export class Desk implements IDesk {
     public generateState(): any {
         let state = {
             players: {},
-            currentCard: this.currentCard
+            currentCard: this.currentCard.getCard()
         };
 
         this.players
@@ -124,7 +124,11 @@ export class Desk implements IDesk {
     }
 
     private setCurrentCard(): void {
-        this.currentCard = this.cards.pop();
+        this.currentCard = new Card(this.cards.pop());
+    }
+
+    public getCurrentCard(): ICard {
+        return this.currentCard;
     }
 }
 

@@ -4,7 +4,6 @@ import * as CONST from "./constants";
 import {Desk, IDesk} from "./models/desk";
 import {Player, IPlayer} from "./models/player";
 import {Card, ICard} from "./models/card";
-import {IPlayer} from "./models/player";
 
 export class Istam {
     private desks: any = {};
@@ -30,14 +29,22 @@ export class Istam {
         s.on('connection', (socket: any): void => {
 
             socket.on("player:data", (data, cb): void => this.playerData(data, cb, socket));
+            socket.on("player:card:click", (data): void => this.playerCardClick(data));
             socket.on('disconnect', (data: any): void => console.log("disconnect"));
         });
 
     }
 
-    private playerData(data: any, cb: any, socket: any) {
+    private playerCardClick(data): void {
+        if(this.playerToDesk[data.uid]) {
+            let desk: IDesk = this.playerToDesk[data.uid];
 
-        console.log("player:data");
+            let hasSign = desk.getCurrentCard().hasSign(data.card);
+            console.log(hasSign);
+        }
+    }
+
+    private playerData(data: any, cb: any, socket: any) {
 
         let player: IPlayer = this.players[data.uid];
 

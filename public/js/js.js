@@ -12,18 +12,65 @@ function setState(state) {
 
 var ScoreBoard = {
     holder: $(".score-board"),
+    players: {},
     generate: function(data) {
-        this.holder.html("aaaa");
+        var playerId,
+            player,
+            html;
+
+        this.players = data.players;
+
+        html = "<table class='score-table'>";
+        for (playerId in this.players) {
+            player = this.players[playerId];
+            html += "<tr><td>" + player.name + "</td><td>" + player.score + "</td></tr>"
+        }
+
+        html += "</table>";
+        this.holder.html(html);
     }
 };
 
-ScoreBoard.generate();
+var Card = {
+    holder: $("#play"),
+    socket: {},
+    html: function(card) {
+        var html =  "<div class='card'>";
 
+        card.forEach(function(sign, i) {
+            var path = "/images/" + sign + ".png";
+            html += "<img src='" + path + "' class='sign sign" + i + "' rel='" + sign + "'/>"
+        });
+
+        html += "</div>";
+
+        $(html).find("img").each(function(){
+            var a = Math.random() * 100 - 5;
+            $(this).css('transform', 'rotate(' + a + 'deg)');
+        });
+
+        return html;
+    },
+
+    generate: function(where, card) {
+        this.holder.find(where).html(this.html(card));
+    },
+
+    setHandlers: function() {
+        var self = this;
+        this.holder.on("click", "img", function(e) {
+            self.socket.emit("player:card:click", {card: $(this).attr("rel"), uid: localStorage.getItem("uid")});
+        });
+    }
+};
 
 function init() {
 
     setHandlers();
     setSocketsHandler();
+
+    Card.setHandlers();
+    Card.socket = socket;
 
     if(!localStorage.getItem("uid")) {
         localStorage.setItem("uid", new Date().getTime());
@@ -37,6 +84,7 @@ function init() {
         setState("join");
     }
 }
+
 
 function setHandlers() {
     $("#add-name button").click(function(e) {
@@ -54,56 +102,28 @@ function setHandlers() {
 }
 
 function setSocketsHandler() {
-    console.log("sockets");
+
     socket.on("desk:add-player", function(data) {
         console.log(data);
     });
 
     socket.on("desk:start", function(data) {
-        console.log(data);
         setState("play");
         generateDesk(data);
+        ScoreBoard.generate(data);
     });
 
     socket.on("desk:refresh-browser", function(data) {
         setState("play");
-        generateDesk(data);
+        ScoreBoard.generate(data);
     });
 }
 
 function generateDesk(data) {
-    generateCard(".card-current", data.currentCard);
-    generateCard(".card-own", data.players[uid].card);
+    Card.generate(".card-current", data.currentCard);
+    Card.generate(".card-own", data.players[uid].card);
 }
 
-function generateCard(where, card) {
-    var playBlock = $("#play");
-    playBlock.find(where).html(generateHtmlCard(card));
-}
-
-function generateHtmlCard(card) {
-    var html =  "<div class='card'>";
-
-    card.forEach(function(sign, i) {
-        var path = "/images/" + sign + ".png";
-        html += "<img src='" + path + "' class='sign sign" + i + "'/>"
-    });
-
-    html += "</div>";
-
-    console.log($(html).find("img"));
-
-    $(html).find("img").each(function(){
-        var a = Math.random() * 100 - 5;
-        $(this).css('transform', 'rotate(' + a + 'deg)');
-    });
-
-    return html;
-}
-
-function generateScoreBoard() {
-
-}
 
 function userDataEmit() {
     socket.emit("player:data", {
