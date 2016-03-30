@@ -1,5 +1,5 @@
 export interface ICard {
-    hasSign(sign: number): boolean;
+    hasSign(sign: string): boolean;
     getCard(): number[];
 }
 

@@ -23,28 +23,47 @@ export class Istam {
         return d;
     }
 
+
     private setSocketConnections(): void {
         let s: any = this.socket;
 
         s.on('connection', (socket: any): void => {
 
             socket.on("player:data", (data, cb): void => this.playerData(data, cb, socket));
-            socket.on("player:card:click", (data): void => this.playerCardClick(data));
+            socket.on("player:card:click", (data, cb): void => this.playerCardClick(data,cb));
             socket.on('disconnect', (data: any): void => console.log("disconnect"));
         });
 
     }
 
-    private playerCardClick(data): void {
+    private playerCardClick(data, cb): void {
         if(this.playerToDesk[data.uid]) {
             let desk: IDesk = this.playerToDesk[data.uid];
+            let player: IPlayer = this.players[data.uid];
 
             let hasSign = desk.getCurrentCard().hasSign(data.card);
-            console.log(hasSign);
+
+            if(hasSign) {
+                player.setCard(desk.getCurrentCard());
+                player.getSocket().emit("desk:card:own", {card: player.getCard().getCard()});
+                player.incrementScore();
+
+                let currentCard: any = desk.setCurrentCard().getCard();
+
+                desk.getPlayers().forEach((player: IPlayer): void => {
+                    let ps: any = player.getSocket();
+
+                    ps.emit("desk:card:current", {card: currentCard});
+                    ps.emit("desk:score", desk.getPlayersScore());
+
+                });
+            }
+
+            cb(hasSign);
         }
     }
 
-    private playerData(data: any, cb: any, socket: any) {
+    private playerData(data: any, cb: any, socket: any): void {
 
         let player: IPlayer = this.players[data.uid];
 

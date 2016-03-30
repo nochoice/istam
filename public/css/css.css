@@ -22,7 +22,14 @@ body {
     border-radius: 50%;
     border: 2px solid red;
     position: relative;
-    background: #fff;
+    background: #000;
+}
+.card .no {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    display: none;
 }
 
 .card .sign {

@@ -11,6 +11,7 @@ export interface IPlayer {
     setSocket(socket: any): void
     getName(): string;
     getScore(): number;
+    incrementScore(): void;
     //getDesk(): IDesk;
     //setDesk(desk: IDesk): void;
     //resetDesk(): void;
@@ -54,6 +55,10 @@ export class Player implements IPlayer{
 
     public getScore(): number {
         return this.score;
+    }
+
+    public incrementScore(): void {
+        this.score++;
     }
 
     //public setDesk(desk: IDesk) {

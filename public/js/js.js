@@ -18,7 +18,7 @@ var ScoreBoard = {
             player,
             html;
 
-        this.players = data.players;
+        this.players = data;
 
         html = "<table class='score-table'>";
         for (playerId in this.players) {
@@ -31,6 +31,7 @@ var ScoreBoard = {
     }
 };
 
+
 var Card = {
     holder: $("#play"),
     socket: {},
@@ -42,7 +43,7 @@ var Card = {
             html += "<img src='" + path + "' class='sign sign" + i + "' rel='" + sign + "'/>"
         });
 
-        html += "</div>";
+        html += "<div class='no'>&nbsp;</div></div>";
 
         $(html).find("img").each(function(){
             var a = Math.random() * 100 - 5;
@@ -58,9 +59,15 @@ var Card = {
 
     setHandlers: function() {
         var self = this;
-        this.holder.on("click", "img", function(e) {
-            self.socket.emit("player:card:click", {card: $(this).attr("rel"), uid: localStorage.getItem("uid")});
+        this.holder.on("click", ".card-own img", function(e) {
+            self.socket.emit("player:card:click", {card: $(this).attr("rel"), uid: localStorage.getItem("uid")}, self.checkValidClick.bind(self));
         });
+    },
+
+    checkValidClick: function(data) {
+        //if(!data) {
+        //    this.holder.find(".card-own .no").show();
+        //}
     }
 };
 
@@ -110,13 +117,26 @@ function setSocketsHandler() {
     socket.on("desk:start", function(data) {
         setState("play");
         generateDesk(data);
-        ScoreBoard.generate(data);
+        ScoreBoard.generate(data.players);
     });
-
+    
     socket.on("desk:refresh-browser", function(data) {
         setState("play");
         ScoreBoard.generate(data);
     });
+
+    socket.on("desk:card:current", function(data) {
+        Card.generate(".card-current", data.card);
+    });
+
+    socket.on("desk:card:own", function(data) {
+        Card.generate(".card-own", data.card);
+    });
+
+    socket.on("desk:score", function(data) {
+        ScoreBoard.generate(data);
+    });
+
 }
 
 function generateDesk(data) {

@@ -13,7 +13,9 @@ export interface IDesk {
     isPrepared(): boolean;
     isStarted(): boolean;
     generateState(): any;
-    getCurrentCard(): ICard
+    getCurrentCard(): ICard;
+    setCurrentCard(): ICard;
+    getPlayersScore(): any;
 }
 
 export class Desk implements IDesk {
@@ -104,7 +106,6 @@ export class Desk implements IDesk {
             }
         });
 
-        console.log("Is in " + isIn);
         return isIn;
     }
 
@@ -123,12 +124,26 @@ export class Desk implements IDesk {
         });
     }
 
-    private setCurrentCard(): void {
+    public setCurrentCard(): ICard {
         this.currentCard = new Card(this.cards.pop());
+        return this.currentCard;
     }
 
     public getCurrentCard(): ICard {
         return this.currentCard;
+    }
+
+    public getPlayersScore(): any {
+        let data: any = {};
+
+        this.players.forEach((p: IPlayer): void => {
+            data[p.getId()] = {
+                name: p.getName(),
+                score: p.getScore()
+            }
+        });
+
+        return data;
     }
 }
 
