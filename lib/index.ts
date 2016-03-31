@@ -8,7 +8,7 @@ import {Card, ICard} from "./models/card";
 export class Istam {
     private desks: any = {};
     private players: any = {};
-    private desk: IDesk;
+    private desk: IDesk;            // open desk, waiting for players
     private playerToDesk: any = {};
 
     constructor(private socket: any) {
@@ -17,7 +17,7 @@ export class Istam {
     }
 
     public createDesk(): IDesk {
-        let d: IDesk = new Desk("Name", 1);
+        let d: IDesk = new Desk("Name", 2);
         this.desks[d.getDeskId()] = d;
 
         return d;
@@ -48,15 +48,33 @@ export class Istam {
                 player.getSocket().emit("desk:card:own", {card: player.getCard().getCard()});
                 player.incrementScore();
 
-                let currentCard: any = desk.setCurrentCard().getCard();
+                if (desk.isCardInStack()) {
+                    let currentCard: any = desk.setCurrentCard().getCard();
+                    let currentScore: any = desk.getPlayersScore();
 
-                desk.getPlayers().forEach((player: IPlayer): void => {
-                    let ps: any = player.getSocket();
+                    desk.getPlayers().forEach((player: IPlayer): void => {
+                        let ps: any = player.getSocket();
 
-                    ps.emit("desk:card:current", {card: currentCard});
-                    ps.emit("desk:score", desk.getPlayersScore());
+                        ps.emit("desk:card:current", {card: currentCard});
+                        ps.emit("desk:score", currentScore);
 
-                });
+                    });
+                } else {
+                    desk.getPlayers()
+                        .forEach((p: IPlayer): void => {
+                            let ps: any = p.getSocket();
+
+                            ps.emit("desk:score", desk.getPlayersScore());
+                            ps.emit("desk:end", {data: "game end"});
+
+                            this.removePlayerFromDesk(p);
+                        });
+
+                    delete this.desks[desk.getDeskId()];
+
+                    console.log(Object.keys(this.desks).length);
+                    console.log(Object.keys(this.playerToDesk).length);
+                }
             }
 
             cb(hasSign);
@@ -106,6 +124,10 @@ export class Istam {
 
         this.playerToDesk[player.getId()] = this.desk;
         this.desk.addPlayer(player);
+    }
+
+    private removePlayerFromDesk(player: IPlayer): void {
+        delete this.playerToDesk[player.getId()];
     }
 }
 

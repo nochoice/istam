@@ -16,6 +16,7 @@ export interface IDesk {
     getCurrentCard(): ICard;
     setCurrentCard(): ICard;
     getPlayersScore(): any;
+    isCardInStack(): boolean;
 }
 
 export class Desk implements IDesk {
@@ -37,6 +38,7 @@ export class Desk implements IDesk {
 
         this.setPlayersCard();
         this.setCurrentCard();
+        this.setPlayersScore(0);
 
         this.players
             .forEach((player: IPlayer): void => {
@@ -124,9 +126,22 @@ export class Desk implements IDesk {
         });
     }
 
+
+    private setPlayersScore(score: number): void {
+        this.players.forEach((player): void => {
+            player.setScore(0);
+        });
+    }
+
     public setCurrentCard(): ICard {
-        this.currentCard = new Card(this.cards.pop());
-        return this.currentCard;
+        if(this.cards.length > 0) {
+            this.currentCard = new Card(this.cards.pop());
+            return this.currentCard;
+        }
+    }
+
+    public isCardInStack(): boolean {
+        return !!this.cards.length;
     }
 
     public getCurrentCard(): ICard {

@@ -59,6 +59,7 @@ var Card = {
 
     setHandlers: function() {
         var self = this;
+
         this.holder.on("click", ".card-own img", function(e) {
             self.socket.emit("player:card:click", {card: $(this).attr("rel"), uid: localStorage.getItem("uid")}, self.checkValidClick.bind(self));
         });
@@ -106,12 +107,16 @@ function setHandlers() {
     $("#join button").click(function(e) {
         userDataEmit();
     });
+
+    $(".play-again").click(function(e) {
+        setState("join");
+    })
 }
 
 function setSocketsHandler() {
 
     socket.on("desk:add-player", function(data) {
-        console.log(data);
+
     });
 
     socket.on("desk:start", function(data) {
@@ -119,9 +124,8 @@ function setSocketsHandler() {
         generateDesk(data);
         ScoreBoard.generate(data.players);
     });
-    
+
     socket.on("desk:refresh-browser", function(data) {
-        setState("play");
         ScoreBoard.generate(data);
     });
 
@@ -136,6 +140,10 @@ function setSocketsHandler() {
     socket.on("desk:score", function(data) {
         ScoreBoard.generate(data);
     });
+
+    socket.on("desk:end", function (data) {
+        setState("end-game");
+    })
 
 }
 
