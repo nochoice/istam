@@ -28,10 +28,25 @@ export class Istam {
         let s: any = this.socket;
 
         s.on('connection', (socket: any): void => {
+            let player: IPlayer;
 
-            socket.on("player:data", (data, cb): void => this.playerData(data, cb, socket));
+            socket.on("player:data", (data, cb): void => {
+                player = this.playerData(data, cb, socket);
+
+            });
+            //socket.on("player:change:name", this.changePlayerName);
             socket.on("player:card:click", (data, cb): void => this.playerCardClick(data,cb));
-            socket.on('disconnect', (data: any): void => console.log("disconnect"));
+            socket.on('disconnect', (data: any): void => {
+                try {
+                    let desk: IDesk = this.playerToDesk[player.getId()];
+                    desk.removePlayer(player);
+                    this.removePlayerFromDesk(player);
+                } catch (e) {
+                    console.error("On user disconnect")
+                    console.error(e);
+                }
+
+            });
         });
 
     }
@@ -81,7 +96,7 @@ export class Istam {
         }
     }
 
-    private playerData(data: any, cb: any, socket: any): void {
+    private playerData(data: any, cb: any, socket: any): IPlayer {
 
         let player: IPlayer = this.players[data.uid];
 
@@ -90,6 +105,7 @@ export class Istam {
         }
 
         player.setSocket(socket);
+        player.setName(data.name);
 
         if(!this.isPlayerIsInDesk(player)) {
             this.addPlayerToDesk(player);
@@ -98,7 +114,9 @@ export class Istam {
         }
 
         this.deskStart();
-        cb();
+        //cb();
+
+        return player;
     }
 
     private deskFullData(player: IPlayer): void {
@@ -127,7 +145,16 @@ export class Istam {
     }
 
     private removePlayerFromDesk(player: IPlayer): void {
-        delete this.playerToDesk[player.getId()];
+        if(player) {
+            delete this.playerToDesk[player.getId()];
+        }
+    }
+
+    private removePlayer(player: IPlayer): void {
+        if(player) {
+            delete this.players[player.getId()];
+        }
+
     }
 }
 

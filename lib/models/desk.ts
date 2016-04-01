@@ -4,9 +4,12 @@ import * as CONST from "../constants";
 
 import {Player, IPlayer} from "./player";
 import {ICard, Card} from "./card";
+import {IPlayer} from "./player";
+import {IPlayer} from "./player";
 
 export interface IDesk {
     addPlayer(player: IPlayer): void;
+    removePlayer(player: IPlayer): void;
     start(): void;
     getPlayers(): IPlayer[];
     getDeskId(): string;
@@ -159,6 +162,14 @@ export class Desk implements IDesk {
         });
 
         return data;
+    }
+
+    public removePlayer(player: IPlayer): void {
+        this.players = this.players.filter((p: IPlayer): boolean => {
+            return player.getId() !== p.getId();
+        });
+
+
     }
 }
 

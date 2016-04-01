@@ -10,6 +10,7 @@ export interface IPlayer {
     getSocket(): any;
     setSocket(socket: any): void
     getName(): string;
+    setName(name: string): void;
     getScore(): number;
     setScore(score: number): void;
     incrementScore(): void;
@@ -27,11 +28,15 @@ export class Player implements IPlayer{
     private score: number = 0;
     
     constructor(private name: string, private id: string, private socket?: any) {
-
+        this.setName(name);
     }
 
     public getName(): string {
         return this.name;
+    }
+
+    public setName(name: string): void {
+        this.name = name.substring(0,CONST.MAX_USER_NAME_LENGTH);
     }
 
     public setCard(card: ICard) {

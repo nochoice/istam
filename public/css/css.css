@@ -1,23 +1,45 @@
 body {
     margin: 0;
-    padding: 5%;
-    background: #1D3557;
-    color: #F1FAEE;
+    padding: 3%;
+    background-color: #F1FAEE;
+    background-image: url("/images/pattern.png");
+    color: #1D3557;
     text-align: center;
     font-family: 'Open Sans', sans-serif;
 }
 
+.clear {
+    float: none;
+    clear: both;
+    height: 0;
+    overflow: hidden;
+}
+
 h1 {
-    margin-bottom: 5%;
+    margin-top: 0;
+    font-size: 60px;
+    letter-spacing: 6px;
+    display: inline-block;
+}
+
+h1 span {
+    font-size: 12px;
+    background: #1D3557;
+    display: block;
+    position: relative;
+    top: -12px;
+    letter-spacing: 0px;
+    font-weight: normal;
+    margin: 0 51px 0 45px;;
+    color: #F1FAEE;
 }
 
 input {
     border: none;
-    border-bottom: 2px solid #4e6096;
     margin: 10px 0;
     background: #1D3557;
     color: #F1FAEE;
-    padding: 10px 5px;
+    padding: 13px 5px;
     text-align: center;
     font-size: 16px;
 }
@@ -27,19 +49,22 @@ input {
 }
 
 .card {
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 210px;
     border-radius: 50%;
-    border: 2px solid #457B9D;
+    border: 2px solid #1D3557;
     position: relative;
     background: #F1FAEE;
+    /*background: #000;*/
+    display: inline-block;
+    margin-bottom: 10px;
 }
 
 .card .no {
     position: absolute;
     height: 100%;
     width: 100%;
-    background: transparent;
+    background: pink;
     display: none;
 }
 
@@ -47,21 +72,27 @@ input {
     position: absolute;
 }
 
+
 .card .sign0 {  top: 10px;  left: 80px;  }
-.card .sign1 {  top: 46px;  left: 20px;  }
+.card .sign1 {  top: 38px;  left: 22px;  }
 .card .sign2 {  top: 93px;  left: 13px;  }
-.card .sign3 {  top: 132px; left: 107px;  }
-.card .sign4 {  top: 44px;  left: 133px;  }
+.card .sign3 {  top: 144px;  left: 116px;  }
+.card .sign4 {  top: 38px;  left: 133px;  }
 .card .sign5 {  top: 91px; left: 145px;  }
-.card .sign6 {  top: 137px; left: 45px;  }
+.card .sign6 {  top: 138px;  left: 53px;  }
 .card .sign7 {  top: 70px;  left: 74px;  }
 
+.card-own .card img {
+    cursor: pointer;
+}
+
 button {
-    background-color:#4872ba;
-    -moz-border-radius:28px;
-    -webkit-border-radius:28px;
-    border-radius:28px;
-    border:2px solid #4e6096;
+    background-color:#E63946;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    xxborder:2px solid #4e6096;
+    border: none;
     display:inline-block;
     cursor:pointer;
     color:#ffffff;
@@ -69,8 +100,53 @@ button {
     font-size:17px;
     padding:13px 36px;
     text-decoration:none;
-    text-shadow:0px 0px 13px #283966;
+    xxtext-shadow:0px 0px 13px #283966;
 }
+
+
 button:hover {
-    background-color:#476e9e;
+    background-color:#E63946;
+}
+
+#menu {
+    margin: 0;
+    padding: 0;
+}
+
+#menu li {
+    list-style: none;
+    /*text-align: left;*/
+    /*display: inline-block;*/
+    padding-left: 10px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    color: #E63946;
+}
+#menu li:hover {
+    color: #1D3557;
+}
+
+
+.score-board {
+    width: 280px;
+    margin: 0 auto;
+}
+.score-board table {
+    width: 100%;
+    border-left: 1px solid #A8DADC;
+    border-top: 1px solid #A8DADC;
+    border-collapse: collapse;
+}
+
+.score-board table td{
+    border-right: 1px solid #A8DADC;
+    border-bottom: 1px solid #A8DADC;
+    padding: 4px 5px;
+}
+
+.score-board table .score {
+    text-align: center;
+    font-weight: bold;
+    background: #A8DADC;
 }

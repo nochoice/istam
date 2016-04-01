@@ -23,7 +23,7 @@ var ScoreBoard = {
         html = "<table class='score-table'>";
         for (playerId in this.players) {
             player = this.players[playerId];
-            html += "<tr><td>" + player.name + "</td><td>" + player.score + "</td></tr>"
+            html += "<tr><td>" + player.name + "</td><td class='score'>" + player.score + "</td></tr>"
         }
 
         html += "</table>";
@@ -45,16 +45,20 @@ var Card = {
 
         html += "<div class='no'>&nbsp;</div></div>";
 
-        $(html).find("img").each(function(){
-            var a = Math.random() * 100 - 5;
-            $(this).css('transform', 'rotate(' + a + 'deg)');
-        });
-
         return html;
     },
 
     generate: function(where, card) {
-        this.holder.find(where).html(this.html(card));
+        var el = this.holder.find(where);
+        var self = this;
+
+        el.html(this.html(card));
+        el.find("img").each(function(){
+            self.rotateElem($(this));
+        });
+
+        this.rotateElem(el);
+
     },
 
     setHandlers: function() {
@@ -65,11 +69,32 @@ var Card = {
         });
     },
 
+    rotateElem: function(elem) {
+        var a = Math.random() * 100 - 5;
+
+        elem.css({
+            "webkitTransform":'rotate(' + a + 'deg)',
+            "MozTransform":'rotate(' + a + 'deg)',
+            "msTransform":'rotate(' + a + 'deg)',
+            "OTransform":'rotate(' + a + 'deg)',
+            "transform":'rotate(' + a + 'deg)'
+        });
+    },
+
     checkValidClick: function(data) {
-        //if(!data) {
-        //    this.holder.find(".card-own .no").show();
-        //}
+        if(!data) {
+            this.disable();
+        }
+    },
+
+    enable: function() {
+        this.holder.find(".card-own .no").hide();
+    },
+
+    disable: function() {
+        this.holder.find(".card-own .no").show();
     }
+
 };
 
 function init() {
@@ -110,7 +135,12 @@ function setHandlers() {
 
     $(".play-again").click(function(e) {
         setState("join");
-    })
+    });
+
+    $("#menu .set-name").click(function(e) {
+        setState("add-name");
+        $("#add-name input").val(localStorage.getItem("playerName"));
+    });
 }
 
 function setSocketsHandler() {
@@ -131,6 +161,7 @@ function setSocketsHandler() {
 
     socket.on("desk:card:current", function(data) {
         Card.generate(".card-current", data.card);
+        Card.enable();
     });
 
     socket.on("desk:card:own", function(data) {

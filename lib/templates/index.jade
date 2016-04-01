@@ -2,28 +2,39 @@
 extends ./layouts/default.jade
 
 block content
-    h1 ISTAM (RK jr.)
+    h1 &lt;ISTAM&gt;
+        span == RK ml. ==
+
     #add-name
-        div Zadejte sve jmeno
-        input(type="text" name="name")
+        input(type="text" name="name" placeholder="Zadejte sve jmeno" maxlength="20")
         br
         button Potvrd
 
     #join
         button Pridej se do hry
+        br
+        br
+        br
+        ul#menu
+            li.set-name &#128588;
+                span  Change name
+            li.help &#127922;
+                span  Help
 
     #wait
         div Zoznam hracov v hre
 
     #play
-        div Playing
-        .score-board Score board
+        //.score-board Score board
         .card-current Current card
         .card-own Own Card
 
 
     #end-game
-        div Konec hry
+        h2 Konec hry
+        h3 Výsledky
 
         .score-board
+        br
+        br
         button.play-again Hrat znovu
