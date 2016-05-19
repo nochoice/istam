@@ -20,6 +20,7 @@ h1 {
     font-size: 60px;
     letter-spacing: 6px;
     display: inline-block;
+    margin-bottom: 30px;
 }
 
 h1 span {
@@ -34,6 +35,12 @@ h1 span {
     color: #F1FAEE;
 }
 
+h2 {
+    margin: 0 0 10px 0;
+}
+h3 {
+    margin: 0 0 10px 0;
+}
 input {
     border: none;
     margin: 10px 0;
@@ -44,7 +51,7 @@ input {
     font-size: 16px;
 }
 
-#add-name, #join, #wait, #play, #end-game {
+#add-name, #join, #wait, #play, #end-game, #help {
     display: none;
 }
 
@@ -57,7 +64,6 @@ input {
     background: #F1FAEE;
     /*background: #000;*/
     display: inline-block;
-    margin-bottom: 10px;
 }
 
 .card .no {
@@ -81,6 +87,12 @@ input {
 .card .sign5 {  top: 91px; left: 145px;  }
 .card .sign6 {  top: 138px;  left: 53px;  }
 .card .sign7 {  top: 70px;  left: 74px;  }
+
+.card-current,
+.card-own {
+    display: inline-block;
+    margin: 10px;
+}
 
 .card-own .card img {
     cursor: pointer;
@@ -145,8 +157,30 @@ button:hover {
     padding: 4px 5px;
 }
 
+.score-board table .you{
+    font-weight: bold;
+    border-left-width: 5px;
+}
+
+
 .score-board table .score {
     text-align: center;
     font-weight: bold;
     background: #A8DADC;
+}
+.players-waiting-list .actual {
+    font-size: 24px;
+    position: relative;
+    top: -10px;
+}
+.players-waiting-list .delimeter {
+    color: #E63946;
+    font-size: 50px;
+    position: relative;
+    top: 10px;
+}
+.players-waiting-list .max {
+    font-size: 24px;
+    position: relative;
+    top: 10px;
 }

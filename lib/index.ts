@@ -15,9 +15,9 @@ export class Istam {
         this.desk = this.createDesk();
         this.setSocketConnections();
     }
-
+    
     public createDesk(): IDesk {
-        let d: IDesk = new Desk("Name", 2);
+        let d: IDesk = new Desk("Name", CONST.MAX_USERS);
         this.desks[d.getDeskId()] = d;
 
         return d;
@@ -71,7 +71,7 @@ export class Istam {
                         let ps: any = player.getSocket();
 
                         ps.emit("desk:card:current", {card: currentCard});
-                        ps.emit("desk:score", currentScore);
+                        // ps.emit("desk:score", currentScore);
 
                     });
                 } else {
@@ -139,9 +139,13 @@ export class Istam {
     }
 
     private addPlayerToDesk(player: IPlayer): void {
-
         this.playerToDesk[player.getId()] = this.desk;
         this.desk.addPlayer(player);
+
+        let playersNum: number = this.desk.getPlayers().length;
+        this.desk.getPlayers().forEach((p: IPlayer): void => {
+            p.getSocket().emit("desk:players-in-desk", {actual: playersNum, max: CONST.MAX_USERS});
+        });
     }
 
     private removePlayerFromDesk(player: IPlayer): void {

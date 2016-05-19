@@ -4,8 +4,6 @@ import * as CONST from "../constants";
 
 import {Player, IPlayer} from "./player";
 import {ICard, Card} from "./card";
-import {IPlayer} from "./player";
-import {IPlayer} from "./player";
 
 export interface IDesk {
     addPlayer(player: IPlayer): void;

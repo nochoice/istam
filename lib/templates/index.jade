@@ -3,9 +3,10 @@ extends ./layouts/default.jade
 
 block content
     h1 &lt;ISTAM&gt;
-        span == RK ml. ==
+        span == DK &#9829; RK ml. ==
 
     #add-name
+        h2 Zvol si jmeno
         input(type="text" name="name" placeholder="Zadejte sve jmeno" maxlength="20")
         br
         button Potvrd
@@ -19,10 +20,14 @@ block content
             li.set-name &#128588;
                 span  Change name
             li.help &#127922;
-                span  Help
+                span  Navod
 
     #wait
-        div Zoznam hracov v hre
+        h2 Zoznam hracov v hre
+        div.players-waiting-list
+            span.actual
+            span.delimeter /
+            span.max
 
     #play
         //.score-board Score board
@@ -38,3 +43,11 @@ block content
         br
         br
         button.play-again Hrat znovu
+
+
+    #help
+        h2 Navod ku hre
+        div Istam je postřehová hra. Každé dvě karty spolu mají společný práve jeden znak. Úkolem hráčů je najít tento společný znak a kliknut na neho na vlastnej karte.
+        br
+        br
+        button.back Zpet

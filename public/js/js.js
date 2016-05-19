@@ -1,5 +1,5 @@
 var socket = io.connect('http://localhost:3700');
-var gameStates = ["add-name", "join", "wait", "play", "end-game"];
+var gameStates = ["add-name", "join", "wait", "play", "end-game", "end-game", "help"];
 var uid;
 
 function setState(state) {
@@ -12,22 +12,41 @@ function setState(state) {
 
 var ScoreBoard = {
     holder: $(".score-board"),
-    players: {},
+    players: [],
     generate: function(data) {
         var playerId,
             player,
-            html;
+            sortedPLayers,
+            html, i, cssClass;
 
         this.players = data;
-
+        sortedPLayers = this.sortPlayers(data);
         html = "<table class='score-table'>";
-        for (playerId in this.players) {
-            player = this.players[playerId];
-            html += "<tr><td>" + player.name + "</td><td class='score'>" + player.score + "</td></tr>"
+        for (i=0; i<sortedPLayers.length; i++) {
+            player = sortedPLayers[i];
+            cssClass = player.id == localStorage.getItem("uid") ? "you" : ""
+            html += "<tr class=' " + cssClass + "'><td>" + player.name + "</td><td class='score'>" + player.score + "</td></tr>"
         }
 
         html += "</table>";
         this.holder.html(html);
+    },
+    sortPlayers: function (data) {
+        var playerId,
+            player,
+            arr = [];
+
+        for (playerId in this.players) {
+            player = this.players[playerId];
+            player.id = playerId
+            arr.push(player);
+        }
+
+        arr.sort(function (a, b) {
+            return b.score - a.score;
+        });
+
+        return arr;
     }
 };
 
@@ -70,7 +89,7 @@ var Card = {
     },
 
     rotateElem: function(elem) {
-        var a = Math.random() * 100 - 5;
+        var a = Math.random() * 360;
 
         elem.css({
             "webkitTransform":'rotate(' + a + 'deg)',
@@ -141,6 +160,16 @@ function setHandlers() {
         setState("add-name");
         $("#add-name input").val(localStorage.getItem("playerName"));
     });
+
+    $("#menu .help").click(function(e) {
+        setState("help");
+    });
+
+    $("#help .back").click(function(e) {
+        setState("join");
+    });
+
+
 }
 
 function setSocketsHandler() {
@@ -174,8 +203,19 @@ function setSocketsHandler() {
 
     socket.on("desk:end", function (data) {
         setState("end-game");
-    })
+    });
 
+    socket.on("desk:players-in-desk", function(data) {
+        PlayersWating.redraw(data);
+    });
+}
+
+var PlayersWating = {
+    holder: $(".players-waiting-list"),
+    redraw: function(data) {
+        this.holder.find(".max").text(data.max);
+        this.holder.find(".actual").text(data.actual);
+    }
 }
 
 function generateDesk(data) {

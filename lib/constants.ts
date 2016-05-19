@@ -1,5 +1,6 @@
 export const UID_LENGTH:number = 5;
-export const MAX_USER_NAME_LENGTH = 20;
+export const MAX_USER_NAME_LENGTH: number = 20;
+export const MAX_USERS: number = 2;
 
 export const CARDS: any = [[0, 1, 2, 3, 4, 5, 6,
     56], [0, 7, 14, 21, 28, 35, 42, 49], [0, 8, 16, 24, 32, 40, 48, 50], [0,
